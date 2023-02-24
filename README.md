@@ -1,4 +1,4 @@
-# senpass
+# SenPass v2
 
 SenPass est une application pour les pass de restauration à la fonction publique du Sénégal
 
