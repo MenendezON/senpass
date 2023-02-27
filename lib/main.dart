@@ -12,10 +12,12 @@ class SenApp extends StatelessWidget {
         title: Text("SenPass"),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Text("Text")
-        ],
+      body: Center(
+        child: Column(
+          children: [
+            Text("I love you, mon amour", style: TextStyle(fontSize: 12),)
+          ],
+        ),
       ),
     );
   }
