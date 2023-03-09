@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "406708631991",
+    "project_id": "senpass-3ec25",
+    "storage_bucket": "senpass-3ec25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406708631991:android:b423ba2835d5bb0916d032",
+        "android_client_info": {
+          "package_name": "sn.senpass.dkr.senpass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406708631991-lg86g373j61d514hu5943j5g76nu1r46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sn.senpass.dkr.senpass",
+            "certificate_hash": "aab0cda243a29640d50f13e55ac26edae9953927"
+          }
+        },
+        {
+          "client_id": "406708631991-jk2gf59cnnl2kghljkhh9ma8r6dnpt1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG_iYhdHos-vkW7w8YhIpO3YhY6Yw5kdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406708631991-jk2gf59cnnl2kghljkhh9ma8r6dnpt1j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

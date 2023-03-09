@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:senpass/data.dart';
+import 'package:senpass/utilities/data.dart';
 
 class MyListContainer extends StatelessWidget {
   final Resto resto;
