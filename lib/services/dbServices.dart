@@ -1,117 +1,84 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:senpass/models/carModel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:senpass/models/ticketModel.dart';
 
-class DatabaseService {
-  String? userID, carID;
-  DatabaseService({this.userID, this.carID});
+class DatabaseTicketService {
+  String? userID;
+  DatabaseTicketService({required this.userID});
+
   // Déclaraction et Initialisation
-  CollectionReference _cars = FirebaseFirestore.instance.collection('cars');
-  FirebaseStorage _storage = FirebaseStorage.instance;
-
-  // upload de l'image vers Firebase Storage
-  Future<String> uploadFile(File file, XFile fileWeb) async {
-    Reference reference = _storage.ref().child('cars/${DateTime.now()}.png');
-    Uint8List imageTosave = await fileWeb.readAsBytes();
-    SettableMetadata metaData = SettableMetadata(contentType: 'image/jpeg');
-    UploadTask uploadTask = kIsWeb
-        ? reference.putData(imageTosave, metaData)
-        : reference.putFile(file);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    return await taskSnapshot.ref.getDownloadURL();
-  }
-
-  // ajout de la voiture dans la BDD
-  void addCar(Car car) {
-    _cars.add({
-      "carName": car.carName,
-      "carUrlImg": car.carUrlImg,
-      "carUserID": car.carUserID,
-      "carUserName": car.carUserName,
-      "carTimestamp": FieldValue.serverTimestamp(),
-      "carFavoriteCount": 0,
-    });
-  }
+  CollectionReference _tickets = FirebaseFirestore.instance.collection('tickets');
 
   // suppression de la voiture
-  Future<void> deleteCar(String carID) => _cars.doc(carID).delete();
+  Future<void> deleteTicket(String ticketID) => _tickets.doc(ticketID).delete();
 
   // Récuperation de toutes les voitures en temps réel
-  Stream<List<Car>> get cars {
-    Query queryCars = _cars.orderBy('carTimestamp', descending: true);
-    return queryCars.snapshots().map((snapshot) {
+  Stream<List<Ticket>> get tickets {
+    Query queryTickets = _tickets.where('ticketOwner', isEqualTo: userID).orderBy('ticketEntry', descending: true);
+    return queryTickets.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
-        return Car(
-          carID: doc.id,
-          carName: doc.get('carName'),
-          carUrlImg: doc.get('carUrlImg'),
-          carUserID: doc.get('carUserID'),
-          carUserName: doc.get('carUserName'),
-          carFavoriteCount: doc.get('carFavoriteCount'),
-          carTimestamp: doc.get('carTimestamp'),
+        return Ticket(
+          ticketID: doc.id,
+          ticketLocate: doc.get('ticketLocate'),
+          ticketNumber: doc.get('ticketNumber'),
+          ticketOwner: doc.get('ticketOwner'),
+          ticketProvider: doc.get('ticketProvider'),
+          ticketRepas: doc.get('ticketRepas'),
+          ticketType: doc.get('ticketType'),
+          ticketEntry: doc.get('ticketEntry'),
         );
       }).toList();
     });
   }
 
-  // ajout de la voiture favoris dans une sous-collection
-  void addFavoriteCar(Car car, String userID) async {
-    final carDocRef = _cars.doc(car.carID);
-    final favoritedBy = carDocRef.collection('favoritedBy');
-    int carFavoriteCount = car.carFavoriteCount!;
-    int increaseCount = carFavoriteCount += 1;
-    favoritedBy.doc(userID).set({
-      "carName": car.carName,
-      "carUrlImg": car.carUrlImg,
-      "carUserID": car.carUserID,
-      "carUserName": car.carUserName,
-      "carTimestamp": car.carTimestamp,
-      "carFavoriteCount": increaseCount,
+
+  /*Stream<int> get fetchNbrTickets {
+    int nberTicket = 0;
+    return _tickets.doc(userID).snapshots().map((doc) {
+      nberTicket += doc.get('ticketNumber') as int;
     });
-    carDocRef.update({"carFavoriteCount": increaseCount});
-  }
+  }*/
 
-  // rétirer la voiture de la liste des favoris
-  void removeFavoriteCar(Car car, String userID) {
-    final carDocRef = _cars.doc(car.carID);
-    final favoritedBy = carDocRef.collection('favoritedBy');
-    int carFavoriteCount = car.carFavoriteCount!;
-    int decreaseCount = carFavoriteCount -= 1;
-    carDocRef.update({"carFavoriteCount": decreaseCount});
-    favoritedBy.doc(userID).delete();
-  }
-
-  // Récuperation des voitures favoris de l'utilisateur en temps réel
-  Stream<Car> get myFavoriteCar {
-    final favoritedBy = _cars.doc(carID).collection('favoritedBy');
-    return favoritedBy.doc(userID).snapshots().map((doc) {
-      return Car(
-        carID: doc.id,
-        carName: doc.get('carName'),
-        carUrlImg: doc.get('carUrlImg'),
-        carUserID: doc.get('carUserID'),
-        carUserName: doc.get('carUserName'),
-        carFavoriteCount: doc.get('carFavoriteCount'),
-        carTimestamp: doc.get('carTimestamp'),
-      );
+  Stream<List<dynamic>> get ticketsNumber {
+    Query queryTickets = _tickets.where('ticketOwner', isEqualTo: userID).orderBy('ticketEntry', descending: true);
+    return queryTickets.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return doc.get('ticketNumber');
+      }).toList();
     });
   }
 
-  Future<Car> singleCar(String carID) async {
-    final doc = await _cars.doc(carID).get();
-    return Car(
-      carID: carID,
-      carName: doc.get('carName'),
-      carUrlImg: doc.get('carUrlImg'),
-      carUserID: doc.get('carUserID'),
-      carUserName: doc.get('carUserName'),
-      carFavoriteCount: doc.get('carFavoriteCount'),
-      carTimestamp: doc.get('carTimestamp'),
+  Future<int?> getTicketNumber() async {
+    // Get a reference to the document
+    DocumentReference documentReference = _tickets.doc();
+
+    // Get the document snapshot
+    DocumentSnapshot documentSnapshot = await documentReference.get();
+
+    // Check if the document exists and has the ticketNumber field
+    if (documentSnapshot.exists && documentSnapshot.data() != null) {
+      // Get the ticketNumber value
+      dynamic data = documentSnapshot.data();
+      int? ticketNumber = (data as Map<String, dynamic>)['ticketNumber'];
+      return ticketNumber;
+    } else {
+      return null;
+    }
+  }
+
+
+  Future<Ticket> singleCar(String ticketID) async {
+    final doc = await _tickets.doc(ticketID).get();
+    return Ticket(
+      ticketID: ticketID,
+      ticketLocate: doc.get('ticketLocate'),
+      ticketNumber: doc.get('ticketNumber'),
+      ticketOwner: doc.get('ticketOwner'),
+      ticketProvider: doc.get('ticketProvider'),
+      ticketRepas: doc.get('ticketRepas'),
+      ticketType: doc.get('ticketType'),
+      ticketEntry: doc.get('ticketEntry'),
     );
   }
 }

@@ -5,13 +5,14 @@ class Car {
   Timestamp? carTimestamp;
   bool? isMyFavoritedCar;
   int? carFavoriteCount;
-  Car(
-      {this.carID,
-        this.carName,
-        this.carUrlImg,
-        this.carUserID,
-        this.carUserName,
-        this.carTimestamp,
-        this.isMyFavoritedCar,
-        this.carFavoriteCount});
+  Car({
+    this.carID,
+    this.carName,
+    this.carUrlImg,
+    this.carUserID,
+    this.carUserName,
+    this.carTimestamp,
+    this.isMyFavoritedCar,
+    this.carFavoriteCount,
+  });
 }

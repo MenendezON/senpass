@@ -1,12 +1,11 @@
 import 'package:beamer/beamer.dart';
-import 'package:tutofirebase/views/detail/carDetail.dart';
-import 'package:tutofirebase/views/home/home.dart';
-import 'package:tutofirebase/views/login/login.dart';
-import 'package:tutofirebase/views/profile/profile.dart';
-import 'package:tutofirebase/views/favorite/favorite.dart';
+import 'package:senpass/pages/archivePage.dart';
+import 'package:senpass/pages/homePage.dart';
+import 'package:senpass/pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:senpass/pages/profilePage.dart';
 
 routerDelegate(BuildContext context) {
   final _user = Provider.of<User?>(context);
@@ -20,7 +19,7 @@ routerDelegate(BuildContext context) {
             key: ValueKey('home'),
             title: 'Accueil/Fire Cars',
             type: BeamPageType.scaleTransition,
-            child: Home(),
+            child: HomePage(user: _user),
           );
         },
         '/login': (context, state) {
@@ -36,10 +35,18 @@ routerDelegate(BuildContext context) {
             key: ValueKey('profile'),
             title: '${_user!.displayName}/Fire Cars',
             type: BeamPageType.scaleTransition,
-            child: Profile(),
+            child: ProfilePage(),
           );
         },
-        '/favorite': (context, state) {
+        '/archive': (context, state) {
+          return BeamPage(
+            key: ValueKey('archive'),
+            title: ' ',
+            type: BeamPageType.scaleTransition,
+            child: ArchivePage(),
+          );
+        },
+        /*'/favorite': (context, state) {
           return BeamPage(
             key: ValueKey('favorite'),
             title: '${_user!.displayName}/Fire Cars',
@@ -56,7 +63,7 @@ routerDelegate(BuildContext context) {
             popToNamed: '/home',
             child: CarDetail(),
           );
-        }
+        }*/
       },
     ),
     guards: [

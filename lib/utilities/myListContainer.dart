@@ -34,11 +34,11 @@ class MyListContainer extends StatelessWidget {
                   Text(
                     resto.name,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18),
+                        fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   Text(
                     '${resto.plate} : ${resto.price.toStringAsFixed(2)} CFA',
-                    style: const TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ],
               ),
