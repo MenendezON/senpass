@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:gap/gap.dart';
 import 'package:senpass/services/authServices.dart';
 import 'package:senpass/utilities/shared-ui/showSnackBar.dart';
 import 'package:flutter/foundation.dart';
@@ -24,39 +25,66 @@ class _LoginState extends State<Login> {
           child: Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.40,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
+                height: MediaQuery.of(context).size.height * 0.25,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
                   image: DecorationImage(
-                    image: AssetImage('assets/fire_car.png'),
-                    fit: BoxFit.cover,
+                    image: AssetImage('assets/images/logo-back.png'),
+                    //: BoxFit.cover,
                   ),
                 ),
               ),
-              Text(
-                'Fire Cars',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline4?.copyWith(
-                  color: Colors.black54,
-                  fontWeight: FontWeight.bold,
+              Container(
+                height: 400,
+                margin: EdgeInsets.all(25),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  border: Border.all(color:Colors.black12, width: 1),
+                  borderRadius: BorderRadius.circular(10)
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  'Découvrez et partagez les meilleures voitures de luxes 2021',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline5?.copyWith(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(15),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'User Name',
+                          hintText: 'Enter Your Name',
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(15),
+                      child: TextField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Password',
+                          hintText: 'Enter Password',
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      child: Text('Se connecter'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                      ),
+                      onPressed: () {},
+                    ),
+                    Gap(15),
+                    Text('- Ou se connecter avec -'),
+                    Gap(15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        inLoginProcess ? Center(child: CircularProgressIndicator()) : ElevatedButton(child: Text(" Google "), onPressed: () => signIn(context)),
+                        Gap(15),
+                        inLoginProcess ? Center(child: CircularProgressIndicator()) : ElevatedButton(child: Text("Facebook"), onPressed: () {}),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              inLoginProcess
-                  ? Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                child: Text("Connectez-vous avec Google"),
-                onPressed: () => signIn(context),
               ),
             ],
           ),

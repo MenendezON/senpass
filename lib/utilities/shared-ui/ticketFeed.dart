@@ -16,14 +16,15 @@ class TicketFeed extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-            margin: EdgeInsets.only(left: 10, top: 20),
-            child: Text(formattingDate(ticket!.ticketEntry), style: TextStyle(fontWeight: FontWeight.bold),),
+            margin: const EdgeInsets.only(left: 10, top: 20),
+            child: Text(formattingDate(ticket!.ticketEntry), style: const TextStyle(fontWeight: FontWeight.bold),),
         ),
         Container(
-          margin: EdgeInsets.only(left: 15, right: 15),
+          margin: const EdgeInsets.only(left: 15, right: 15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(width: 2, color: Colors.black12)),
+              border: Border.all(width: 2, color: Colors.black12)
+    ),
           child: ListTile(
             leading: const Icon(Icons.add),
             title: Text(
@@ -47,7 +48,7 @@ class TicketFeed extends StatelessWidget {
   String formattingDate(Timestamp? timestamp) {
     initializeDateFormatting('fr', null);
     DateTime? dateTime = timestamp?.toDate();
-    DateFormat dateFormat = DateFormat.MMMd('fr');
+    DateFormat dateFormat = DateFormat.MMMMEEEEd('fr');
     return dateFormat.format(dateTime ?? DateTime.now());
   }
 }

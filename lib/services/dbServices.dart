@@ -5,7 +5,7 @@ import 'package:senpass/models/ticketModel.dart';
 
 class DatabaseTicketService {
   String? userID;
-  DatabaseTicketService({required this.userID});
+  DatabaseTicketService({this.userID});
 
   // Déclaraction et Initialisation
   CollectionReference _tickets = FirebaseFirestore.instance.collection('tickets');
@@ -15,7 +15,8 @@ class DatabaseTicketService {
 
   // Récuperation de toutes les voitures en temps réel
   Stream<List<Ticket>> get tickets {
-    Query queryTickets = _tickets.where('ticketOwner', isEqualTo: userID).orderBy('ticketEntry', descending: true);
+    Query queryTickets = _tickets.doc('aHkHgARWC0ZnsPbcNBWs').collection('listTickets').where('ticketOwner', isEqualTo: userID).orderBy('ticketEntry', descending: true);
+    //Query queryTickets = _tickets.doc('ticketID').collection('listTickets').where('ticketOwner', isEqualTo: userID).orderBy('ticketEntry', descending: true);
     return queryTickets.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         return Ticket(
@@ -30,6 +31,45 @@ class DatabaseTicketService {
         );
       }).toList();
     });
+  }
+
+  // ajout d'un ticket dans la BDD
+  Future<String> addTicketDB(Ticket ticket) async {
+    DocumentReference docRef = await _tickets.add({
+      "isMyFavoritedTicket": false,
+      "ticketLocate":ticket.ticketLocate,
+      "ticketNumber":ticket.ticketNumber,
+      "ticketOwner":ticket.ticketOwner,
+      "ticketProvider":ticket.ticketProvider,
+      "ticketRepas":1000,
+      "ticketType":"Resto SGG 2023",
+      "ticketEntry":FieldValue.serverTimestamp(),
+    });
+    return docRef.id;
+  }
+
+  // ajout d'un ticket dans une sous-collection
+  void addSubTicket(Ticket ticket, String ticketID) async {
+    final ticketDocRef = _tickets.doc(ticketID);
+    final listTickets = ticketDocRef.collection('listTickets');
+    int ticketNumberCount = ticket.ticketNumber!; // 15
+    //Récupère le nombre du ticket existant
+    DocumentSnapshot ticketSnapshot = await ticketDocRef.get();
+    Map<String, dynamic> ticketData = ticketSnapshot.data() as Map<String, dynamic>;
+    int ticketNbr = ticketData['ticketNumber'] as int;
+    //Ajouter de la nouvelle valeur à l'ancienne
+    int increaseCount = ticketNumberCount + ticketNbr;//15+15
+    listTickets.doc(userID).set({
+      "isMyFavoritedTicket": false,
+      "ticketLocate":ticket.ticketLocate,
+      "ticketNumber":ticket.ticketNumber,
+      "ticketOwner":ticket.ticketOwner,
+      "ticketProvider":ticket.ticketProvider,
+      "ticketRepas":1000,
+      "ticketType":"Resto SGG 2023",
+      "ticketEntry":FieldValue.serverTimestamp(),
+    });
+    ticketDocRef.update({"ticketNumber": increaseCount});
   }
 
 

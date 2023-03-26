@@ -26,7 +26,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             Gap(20),
             CircleAvatar(
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.indigo,
               radius: 105,
               child: CircleAvatar(
                 radius: 100,
@@ -34,8 +34,9 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             Text(_user!.displayName!, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+            Text(_user!.email!, style: TextStyle(fontSize: 16),),
             InkWell(
-              child: Text('Se déconnecter', style: TextStyle(color:Colors.blueAccent, fontSize: 15),),
+              child: const Text('Se déconnecter', style: TextStyle(color:Colors.blueAccent, fontSize: 15),),
               onTap: () => signOut(context)
             )
           ],

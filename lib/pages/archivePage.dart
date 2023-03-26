@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:beamer/beamer.dart';
 import 'package:senpass/utilities/ticketList.dart';
 
 class ArchivePage extends StatefulWidget {
@@ -13,23 +12,11 @@ class ArchivePage extends StatefulWidget {
 }
 
 class _ArchivePageState extends State<ArchivePage> {
-  int _selectedIndex = 0;
   late final String? userID;
-
-  void _onItemTapped(int index) {
-    if(index == 1) {
-      Beamer.of(context).beamToNamed('/favorite');
-    }
-
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final _user = Provider.of<User?>(context);
-
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -37,7 +24,7 @@ class _ArchivePageState extends State<ArchivePage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         centerTitle: true,
-        title: Text('${_user!.uid}'),
+        title: const Text('Mes tickets'),
       ),
       body: SafeArea(
         child: Scrollbar(

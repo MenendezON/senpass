@@ -55,23 +55,3 @@ List<Resto> restoList = [
       phone: '',
       image: 'assets/images/image6.jpg'),
 ];
-
-class Ticket {
-  User user;
-  String resto;
-  String proposeby;
-  String locate;
-  int prixUnit;
-  int nbreTicket;
-
-  Ticket({
-    required this.user,
-    required this.resto,
-    required this.proposeby,
-    required this.locate,
-    required this.prixUnit,
-    required this.nbreTicket,
-  });
-}
-
-List<Ticket> ticketList = [];

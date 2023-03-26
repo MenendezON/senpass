@@ -1,37 +1,35 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
+import 'package:senpass/models/ticketModel.dart';
+import 'package:senpass/services/dbServices.dart';
+import 'package:senpass/utilities/shared-ui/showSnackBar.dart';
 
 class TransfertDialog {
   User? user;
-  TransfertDialog({this.user});
+  int? numberTicket;
+  TransfertDialog({this.user, this.numberTicket});
 
   // pour visualiser la boite de dialogue
   void showTransfertDialog(BuildContext context) async {
     final _keyForm = GlobalKey<FormState>();
-    String _carName = '';
+    int _ticketNumber = 0;
+    String _user1 = '';
+    String _user2 = '';
     String _formError = 'Veillez fournir le nom de la voiture svp!';
 
-    // Initial Selected Value
-    String dropdownvalue = 'Item 1';
-
     // List of items in our dropdown menu
-    var items = [
-      'Item 1',
-      'Item 2',
-      'Item 3',
-      'Item 4',
-      'Item 5',
-    ];
+    List<String> u1 = [user!.uid as String]; //?
+    var u2 = ['gUXzCQalaFPcrN1lMh2XGcWXgGI2']; //menendezon@gmail.com
+
+    // Initial Selected Value
+    String u1Value = u1.first;
+    String u2Value = u2.first;
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          final mobilHeight = MediaQuery.of(context).size.height * 0.25;
-          final webHeight = MediaQuery.of(context).size.height * 0.5;
           return SimpleDialog(
             contentPadding: EdgeInsets.zero,
             children: [
@@ -42,57 +40,69 @@ class TransfertDialog {
                     Form(
                         key: _keyForm,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TextFormField(
+                            const Center(
+                                child: Text(
+                              'PARTAGER MES TICKETS',
+                              style:
+                                  TextStyle(letterSpacing: 1.5, fontSize: 16),
+                            )),
+                            const Gap(25),
+                            DropdownButton(
+                              value: u1Value,
+                              icon: const Icon(Icons.arrow_downward),
+                              elevation: 16,
+                              style: const TextStyle(
+                                  color: Colors.black38, fontSize: 15),
+                              underline: Container(
+                                height: 0,
+                                color: Colors.black12,
+                              ),
+                              onChanged: (String? value) {
+                                u1Value = value!;
+                              },
+                              items: u1.map<DropdownMenuItem<String>>(
+                                  (String value1) {
+                                return DropdownMenuItem<String>(
+                                  value: value1,
+                                  child: Text(value1),
+                                );
+                              }).toList(),
+                            ),
+                            const Gap(10),
+                            DropdownButton(
+                              value: u2Value,
+                              icon: const Icon(Icons.arrow_downward),
+                              elevation: 16,
+                              style: const TextStyle(
+                                  color: Colors.black38, fontSize: 15),
+                              underline: Container(
+                                height: 0,
+                                color: Colors.black12,
+                              ),
+                              onChanged: (String? value) {
+                                u2Value = value!;
+                              },
+                              items: u2.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            const Gap(10),
+                            TextField(
+                              style: TextStyle(fontSize: 15),
                               decoration: const InputDecoration(
-                                icon: const Icon(Icons.person),
-                                hintText: 'Enter your name',
-                                labelText: 'Name',
-                              ),
+                                  labelText: "Enter your number"),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ], // Only numbers can be entered
                             ),
-                            TextFormField(
-                              maxLength: 20,
-                              onChanged: (value) => _carName = value,
-                              validator: (value) =>
-                                  _carName == '' ? _formError : null,
-                              decoration: InputDecoration(
-                                labelText: 'Nom de la voiture',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top:50),
-                              child: Container(
-                                height: 50,
-                                width: 250,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black12,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: DropdownButton(
-                                  value: dropdownvalue,
-                                  icon: const Icon(Icons.arrow_downward),
-                                  elevation: 16,
-                                  style: const TextStyle(color: Colors.black38),
-                                  underline: Container(
-                                    height: 0,
-                                    color: Colors.black12,
-                                  ),
-                                  onChanged: (String? value) {
-                                    dropdownvalue = value!;
-                                  },
-                                  items: items.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
+                            const Gap(15),
                           ],
                         )),
                     Align(
@@ -100,15 +110,15 @@ class TransfertDialog {
                       child: Wrap(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: 8.0),
+                            padding: const EdgeInsets.only(right: 8.0),
                             child: TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: Text('ANNULER'),
+                              child: const Text('ANNULER'),
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () {},
-                            child: Text('PUBLIER'),
+                            onPressed: () {}, //=> onSubmit(context, _keyForm, _user1, _user2, _ticketNumber),
+                            child: const Text('PARTAGER'),
                           )
                         ],
                       ),
@@ -121,5 +131,21 @@ class TransfertDialog {
         });
   }
 
-  void onSubmit(context, keyForm, file, fileWeb, carName, user) async {}
+  void onSubmit(context, _keyForm, _user1, _user2, _ticketNumber, _numberTicket) async {
+    if (_keyForm.currentState!.validate()) {
+      Navigator.of(context).pop();
+      showNotification(context, "Chargement...");
+      try {
+        if(_numberTicket > _ticketNumber){
+          showNotification(context, "Vous avez pas assez de ticket à partager");
+        }else{
+          //if()
+        }
+        DatabaseTicketService db = DatabaseTicketService();
+        //db.addTicket();
+      } catch (error) {
+        showNotification(context, "Erreur $error");
+      }
+    }
+  }
 }

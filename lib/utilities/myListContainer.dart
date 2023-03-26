@@ -11,15 +11,17 @@ class MyListContainer extends StatelessWidget {
     return GestureDetector(
       child: Container(
         margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.all(1.0),
         decoration: BoxDecoration(
+            color: Colors.white,
             border: Border.all(color: Colors.black12),
             borderRadius: BorderRadius.all(Radius.circular(5.0))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 220,
-              height: 200,
+              width: 160,
+              height: 150,
               decoration: BoxDecoration(
                   image: DecorationImage(
                 fit: BoxFit.cover,
@@ -27,7 +29,7 @@ class MyListContainer extends StatelessWidget {
               )),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -37,7 +39,7 @@ class MyListContainer extends StatelessWidget {
                         fontWeight: FontWeight.bold, fontSize: 15),
                   ),
                   Text(
-                    '${resto.plate} : ${resto.price.toStringAsFixed(2)} CFA',
+                    '${resto.plate} : ${resto.price} F',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],

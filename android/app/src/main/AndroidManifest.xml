@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sn.senpass.dkr.senpass">
    <application
-        android:label="senpass"
+        android:label="SenPass"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
