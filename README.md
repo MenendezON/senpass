@@ -1,5 +1,7 @@
 # SenPass v2
 
+Last update : 30 mars 19:45 
+
 SenPass est une application mobile utilisé dans le secteur de la restauration au Sénégal. Cette application est spécialement utilisé dans la fonction publique du Sénégal.
  - Les ministères
  - Les évènements
